@@ -11,8 +11,12 @@ const outputFile = fs.openSync('classes.json', 'w');
 
 function processEntry(line) {
   const { id, content } = JSON.parse(line);
-  for (const classSource of extractClasses(content).map(stripMethodBodies)) {
-    fs.writeSync(outputFile, JSON.stringify({ id, source: classSource }) + '\n');
+  try {
+    for (const classSource of extractClasses(content).map(stripMethodBodies)) {
+      fs.writeSync(outputFile, JSON.stringify({ id, source: classSource }) + '\n');
+    }
+  } catch (err) {
+    console.error(`Parsing failed for ${id}: ${err.toString()}`);
   }
 }
 
